@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>協力型謎解きゲーム</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 初期状態でリセットボタンを隠す */
+        .resetButton {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,11 +38,13 @@
         <!-- プレイヤーの準備完了ボタン -->
         <button id="player1ReadyButton">プレイヤー1 準備完了</button>
         <button id="player2ReadyButton">プレイヤー2 準備完了</button>
+        <!-- プレイヤーの準備リセットボタン -->
+        <button id="player1ResetButton" class="resetButton">プレイヤー1 準備リセット</button>
+        <button id="player2ResetButton" class="resetButton">プレイヤー2 準備リセット</button>
     </div>
 
     <!-- Firebase SDKs -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
       
@@ -72,7 +80,6 @@
 
         // プレイヤーの状態を更新
         function updatePlayerStatus(playerId, status) {
-            console.log(`Updating ${playerId} to ${status}`); // デバッグ用ログ
             set(ref(db, 'players/' + playerId), {
                 status: status
             }).then(() => {
@@ -80,6 +87,17 @@
             }).catch((error) => {
                 console.error('Error updating status:', error);
             });
+        }
+
+        // プレイヤーの状態に応じてリセットボタンを表示
+        function updateResetButtons(players) {
+            if (players) {
+                const player1ResetButton = document.getElementById('player1ResetButton');
+                const player2ResetButton = document.getElementById('player2ResetButton');
+
+                player1ResetButton.style.display = (players.player1 && players.player1.status === 'ready') ? 'inline-block' : 'none';
+                player2ResetButton.style.display = (players.player2 && players.player2.status === 'ready') ? 'inline-block' : 'none';
+            }
         }
 
         // リアルタイムでプレイヤーの状態を取得
@@ -95,6 +113,8 @@
                 player2Status.textContent = player2Ready ? '準備完了' : '待機中';
 
                 solvePuzzleButton.disabled = !(player1Ready && player2Ready);
+
+                updateResetButtons(players); // リセットボタンの表示・非表示を更新
             }
         });
 
@@ -118,6 +138,15 @@
 
         document.getElementById('player2ReadyButton').addEventListener('click', () => {
             updatePlayerStatus('player2', 'ready');
+        });
+
+        // プレイヤーの準備状態をリセット
+        document.getElementById('player1ResetButton').addEventListener('click', () => {
+            updatePlayerStatus('player1', 'waiting');
+        });
+
+        document.getElementById('player2ResetButton').addEventListener('click', () => {
+            updatePlayerStatus('player2', 'waiting');
         });
     </script>
 </body>
