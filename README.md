@@ -10,7 +10,7 @@ firebaseのリアルタイム性を活かした作品をつくりたい！とい
 
 ## ③DEMO
 
-https://gsdeploy.sakura.ne.jp/firebase/firebase.html（任意）
+https://gsdeploy.sakura.ne.jp/firebaseapp/firebase.html（任意）
 ↑すみません、一度誤ったURLで提出していました。
 
 ## ④作ったアプリケーション用のIDまたはPasswordがある場合
