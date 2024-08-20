@@ -1,0 +1,74 @@
+/* 基本のスタイル */
+body {
+    font-family: Arial, sans-serif; /* 読みやすいフォント */
+    background-color: #f0f8ff; /* 軽やかで明るい背景色 */
+    color: #333; /* 文字色 */
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #4a90e2; /* タイトルの色 */
+    margin-top: 20px;
+}
+
+/* ゲームエリアのスタイル */
+#gameArea {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff; /* ゲームエリアの背景色 */
+    border-radius: 8px; /* 角を丸く */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影をつけて浮き上がらせる */
+}
+
+/* プレイヤーの状態のスタイル */
+p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+#player1Status, #player2Status {
+    font-weight: bold;
+}
+
+/* 入力フィールドとラベルのスタイル */
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px; /* 角を丸く */
+    width: 80px;
+    text-align: center;
+}
+
+/* ボタンのスタイル */
+button {
+    background-color: #4a90e2; /* ボタンの背景色 */
+    color: #fff; /* ボタンの文字色 */
+    border: none;
+    border-radius: 20px; /* 丸いボタン */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* ホバー時のアニメーション */
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #357abd; /* ホバー時の背景色 */
+    transform: scale(1.05); /* ホバー時の拡大 */
+}
+
+button:disabled {
+    background-color: #ddd; /* 無効時の背景色 */
+    cursor: not-allowed; /* カーソルの変更 */
+    color: #666; /* 無効時の文字色 */
+}

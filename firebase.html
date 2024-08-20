@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>協力型謎解きゲーム</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>協力型謎解きゲーム</h1>
+    <div id="gameArea">
+        <p>
+            プレイヤー1: <span id="player1Status">待機中</span>
+        </p>
+        <p>
+            プレイヤー2: <span id="player2Status">待機中</span>
+        </p>
+        <p>
+            目標合計: <span id="targetSum">10</span>
+        </p>
+        <div>
+            <label for="player1Input">プレイヤー1の選択:</label>
+            <input type="number" id="player1Input" min="0" max="10">
+        </div>
+        <div>
+            <label for="player2Input">プレイヤー2の選択:</label>
+            <input type="number" id="player2Input" min="0" max="10">
+        </div>
+        <button id="solvePuzzle">パズルを解く</button>
+        <!-- プレイヤーの準備完了ボタン -->
+        <button id="player1ReadyButton">プレイヤー1 準備完了</button>
+        <button id="player2ReadyButton">プレイヤー2 準備完了</button>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA2FcIns6Zh0stRIX6U1AEkXGEDzme_ja0",
+          authDomain: "fir-app-2761b.firebaseapp.com",
+          projectId: "fir-app-2761b",
+          storageBucket: "fir-app-2761b.appspot.com",
+          messagingSenderId: "955970690227",
+          appId: "1:955970690227:web:eda14c0ca5d19a369c24c6"
+        };
+      
+        // Initialize Firebase
+       
+        // Firebaseの初期化
+        const app = initializeApp(firebaseConfig);
+        const database = firebase.database();
+    const db = getDatabase(app); // RealtimeDatabase使うよ
+    const dbRef = ref(db, "firebaseapp"); // RealtimeDatabase”fire~“を使うよ
+        
+
+        // プレイヤーの状態を管理
+        let player1Ready = false;
+        let player2Ready = false;
+
+        // DOM要素の取得
+        const player1Status = document.getElementById('player1Status');
+        const player2Status = document.getElementById('player2Status');
+        const solvePuzzleButton = document.getElementById('solvePuzzle');
+        const player1Input = document.getElementById('player1Input');
+        const player2Input = document.getElementById('player2Input');
+        const targetSumElement = document.getElementById('targetSum');
+
+        // ランダムな目標合計を生成
+        const targetSum = Math.floor(Math.random() * 20) + 1; // 1から20のランダムな数
+        targetSumElement.textContent = targetSum;
+
+        // プレイヤーの状態を更新
+        function updatePlayerStatus(playerId, status) {
+            console.log(`Updating ${playerId} to ${status}`); // デバッグ用ログ
+            set(ref(database, 'players/' + playerId), {
+                status: status
+            }).then(() => {
+                console.log(`${playerId} updated to ${status}`);
+            }).catch((error) => {
+                console.error('Error updating status:', error);
+            });
+        }
+
+        // リアルタイムでプレイヤーの状態を取得
+        // リアルタイムでプレイヤーの状態を取得
+onValue(ref(db, 'players/'), snapshot => {
+    const players = snapshot.val();
+    console.log('Players data:', players); // デバッグ用ログ
+
+    if (players) {
+        player1Ready = players.player1 && players.player1.status === 'ready';
+        player2Ready = players.player2 && players.player2.status === 'ready';
+
+        player1Status.textContent = player1Ready ? '準備完了' : '待機中';
+        player2Status.textContent = player2Ready ? '準備完了' : '待機中';
+
+        solvePuzzleButton.disabled = !(player1Ready && player2Ready);
+    }
+});
+
+        // パズルを解くボタンのクリックイベント
+        solvePuzzleButton.addEventListener('click', () => {
+            const player1Value = parseInt(player1Input.value, 10);
+            const player2Value = parseInt(player2Input.value, 10);
+
+            if (player1Value + player2Value === targetSum) {
+                alert('パズルを解きました！');
+                // パズルを解いた後の処理を追加
+            } else {
+                alert('合計が正しくありません。もう一度試してください。');
+            }
+        });
+
+        // プレイヤーの準備状態をシミュレート（実際のゲームではユーザーのアクションに基づいて更新）
+        document.getElementById('player1ReadyButton').addEventListener('click', () => {
+            updatePlayerStatus('player1', 'ready');
+        });
+
+        document.getElementById('player2ReadyButton').addEventListener('click', () => {
+            updatePlayerStatus('player2', 'ready');
+        });
+    </script>
+</body>
+
+</html>
